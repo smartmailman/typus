@@ -1,5 +1,7 @@
 class FakeUser
 
+  include Typus::Orm::ActiveRecord::User::InstanceMethods
+
   def id
     0
   end
@@ -30,10 +32,6 @@ class FakeUser
 
   def application(name)
     Typus.application(name)
-  end
-
-  def role
-    Typus.master_role
   end
 
   def status
