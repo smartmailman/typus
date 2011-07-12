@@ -14,12 +14,26 @@ module Admin
 
       attachment = @item.send(attribute)
 
+      # We are here and we already know we are handling attachments, but
+      # `dragonfly` and `paperclip` have different behaviors.
+
+      if defined?(Paperclip)
+        present = case attachment
+                  when Paperclip::Attachment
+                    attachment.exists?
+                  else
+                    attachment.present?
+                  end
+      else
+        present = attachment.present?
+      end
+
       field = case get_type_of_attachment(attachment)
               when :dragonfly then attribute
               when :paperclip then "#{attribute}_file_name"
               end
 
-      if !validators.include?(field) && attachment
+      if present && !validators.include?(field) && attachment
         attribute_i18n = @item.class.human_attribute_name(attribute)
         message = Typus::I18n.t("Remove")
         label_text = <<-HTML

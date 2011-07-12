@@ -51,13 +51,15 @@ module Admin
     end
 
     def table_actions(model, item, association_name = nil)
-      resource_actions.map do |body, url, options|
+      resource_actions.map do |body, url, options, proc|
         if admin_user.can?(url[:action], model.name)
+          next if proc && proc.respond_to?(:call) && proc.call(item) == false
+
           link_to Typus::I18n.t(body),
-                  params.dup.cleanup.merge(url).merge(:controller => model.to_resource, :id => item.id),
+                  params.dup.cleanup.merge(url).merge(:controller => "/admin/#{model.to_resource}", :id => item.id),
                   options
         end
-      end.join(" / ").html_safe
+      end.compact.join(" / ").html_safe
     end
 
     def table_belongs_to_field(attribute, item)
@@ -83,15 +85,15 @@ module Admin
       (raw_content = item.send(attribute)).present? ? truncate(raw_content) : "&mdash;".html_safe
     end
 
-    def table_generic_field(attribute, item)
+    def table_string_field(attribute, item)
       (raw_content = item.send(attribute)).present? ? raw_content : "&mdash;".html_safe
     end
 
-    alias :table_float_field :table_generic_field
-    alias :table_integer_field :table_generic_field
-    alias :table_decimal_field :table_generic_field
-    alias :table_virtual_field :table_generic_field
-    alias :table_string_field :table_generic_field
+    alias :table_float_field :table_string_field
+    alias :table_integer_field :table_string_field
+    alias :table_decimal_field :table_string_field
+    alias :table_virtual_field :table_string_field
+    alias :table_password_field :table_string_field
 
     def table_selector_field(attribute, item)
       item.mapping(attribute)
@@ -132,6 +134,7 @@ module Admin
 
     alias :table_date_field :table_datetime_field
     alias :table_time_field :table_datetime_field
+    alias :table_timestamp_field :table_datetime_field
 
     def table_boolean_field(attribute, item)
       status = item.send(attribute)

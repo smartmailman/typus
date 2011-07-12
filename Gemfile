@@ -8,7 +8,7 @@ gemspec
 
 gem 'acts_as_list'
 gem 'acts_as_tree'
-gem 'dragonfly', '~>0.8.1'
+gem 'dragonfly', '~> 0.9'
 gem 'factory_girl'
 gem 'paperclip'
 gem 'rack-cache', :require => 'rack/cache'
@@ -34,7 +34,7 @@ group :development, :test do
   end
 
   platforms :ruby do
-    gem 'mysql2'
+    gem 'mysql2', '0.2.7'
     gem 'pg'
     gem 'sqlite3'
   end
@@ -43,9 +43,13 @@ end
 
 # MongoDB support is still in "beta" mode, so I'm not testing it for the moment.
 group :production do
-  # MongoDB support
-  gem 'mongoid', '2.0.0.rc.7'
-  gem 'bson_ext'
+
+  gem 'mongoid'
+
+  platforms :ruby do
+    gem 'bson_ext'
+  end
+
 end
 
 group :production do

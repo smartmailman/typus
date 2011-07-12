@@ -21,6 +21,7 @@ Factory.define :asset do |f|
   f.dragonfly File.new("#{Rails.root}/public/images/rails.png")
   f.dragonfly_required File.new("#{Rails.root}/public/images/rails.png")
   f.paperclip File.new("#{Rails.root}/public/images/rails.png")
+  f.paperclip_required File.new("#{Rails.root}/public/images/rails.png")
 end
 
 Factory.define :category do |f|
@@ -56,6 +57,7 @@ end
 Factory.define :view do |f|
   f.ip "127.0.0.1"
   f.association :post
+  f.association :site
 end
 
 ##
@@ -117,4 +119,13 @@ end
 Factory.define :devise_user do |f|
   f.sequence(:email) { |n| "john+#{n}@example.com"}
   f.password "12345678"
+end
+
+##
+# Contexts
+##
+
+Factory.define :site do |f|
+  f.sequence(:name) { |n| "Site##{n}" }
+  f.sequence(:domain) { |n| "site#{n}.local" }
 end

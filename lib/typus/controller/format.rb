@@ -28,7 +28,7 @@ module Typus
 
         options = { :conditions => @conditions, :batch_size => 1000 }
 
-        ::FasterCSV.open(filename, 'w', :col_sep => ';') do |csv|
+        ::FasterCSV.open(filename, 'w') do |csv|
           csv << fields.keys
           @resource.find_in_batches(options) do |records|
             records.each do |record|
@@ -38,7 +38,7 @@ module Typus
                          a, b = key.split(".")
                          record.send(a).send(b)
                        when :belongs_to
-                         record.send(key).to_label
+                         record.send(key).try(:to_label)
                        else
                          record.send(key)
                        end

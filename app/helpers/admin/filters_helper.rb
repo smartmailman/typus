@@ -10,7 +10,7 @@ module Admin
                   items = case value
                           when :boolean then boolean_filter(key)
                           when :string then string_filter(key)
-                          when :date, :datetime then date_filter(key)
+                          when :date, :datetime, :timestamp then date_filter(key)
                           when :belongs_to then belongs_to_filter(key)
                           when :has_many, :has_and_belongs_to_many then
                             has_many_filter(key)
@@ -79,10 +79,10 @@ module Admin
     end
 
     def string_filter(filter)
-      values = if @resource.const_defined?(filter.to_s.upcase)
-                 @resource::const_get(filter.to_s.upcase).to_a
+      values = if set_context.const_defined?(filter.to_s.upcase)
+                 set_context::const_get(filter.to_s.upcase).to_a
                else
-                 @resource.send(filter.to_s).to_a
+                 set_context.send(filter.to_s).to_a
                end
 
       items = [[Typus::I18n.t("Show by %{attribute}", :attribute => @resource.human_attribute_name(filter).downcase), ""]]
