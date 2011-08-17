@@ -2,6 +2,9 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "typus/version"
 
+files = `git ls-files`.split("\n") + Dir["config/locales/*.yml"]
+test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
+
 Gem::Specification.new do |s|
   s.name = "typus"
   s.version = Typus::VERSION
@@ -14,13 +17,13 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "typus"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = files - test_files
+  s.test_files    = []
   s.require_paths = ["lib"]
 
   s.add_dependency "bcrypt-ruby"
   s.add_dependency "fastercsv", "~> 1.5"
-  s.add_dependency "rails", "~> 3.0.8"
+  s.add_dependency "rails", "~> 3.0.9"
   s.add_dependency "render_inheritable"
-  s.add_dependency "will_paginate", "~> 3.0.pre2"
+  s.add_dependency "will_paginate", "~> 3.0.0"
 end

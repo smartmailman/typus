@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     end
 
     Typus.resources.map { |i| i.underscore }.each do |resource|
+      resources resource
       match "#{resource}(/:action(/:id(.:format)))", :controller => resource
     end
 

@@ -113,15 +113,6 @@ Factory.define :image_holder do |f|
 end
 
 ##
-# Devise User
-##
-
-Factory.define :devise_user do |f|
-  f.sequence(:email) { |n| "john+#{n}@example.com"}
-  f.password "12345678"
-end
-
-##
 # Contexts
 ##
 
