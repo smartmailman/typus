@@ -55,7 +55,12 @@ gem "paperclip", "~> 2.3.16"
 gem "mongoid", "~> 2.1"
 gem "bson_ext", "~> 1.3"
 
+group :development do
+  gem "rspec-rails"
+end
+
 group :test do
+  gem "rspec-rails"
   gem "shoulda-context", "~> 1.0.0.beta1"
   gem "mocha" # Make sure mocha is loaded at the end ...
 end
