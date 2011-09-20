@@ -101,6 +101,12 @@ module Typus
           data.extract_settings.map { |i| i.to_sym }
         end
 
+        def typus_order_by
+          typus_defaults_for(:order_by).map do |field|
+            field.include?('-') ? "#{field.delete('-')} DESC" : "#{field} ASC"
+          end.join(', ')
+        end
+
       end
     end
   end

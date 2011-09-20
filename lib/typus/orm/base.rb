@@ -80,11 +80,7 @@ module Typus
         end
       end
 
-      def typus_order_by
-        typus_defaults_for(:order_by).map do |field|
-          field.include?('-') ? "#{field.delete('-')} DESC" : "#{field} ASC"
-        end.join(', ')
-      end
+      def typus_order_by;end
 
       #--
       # Define our own boolean mappings.
