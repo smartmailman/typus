@@ -147,7 +147,7 @@ class Admin::ResourcesController < Admin::BaseController
   def get_objects
     set_scope
     set_wheres
-    set_joins
+    set_joins if @resource.respond_to?(:build_my_joins)
     check_resources_ownership if @resource.typus_options_for(:only_user_items)
     set_order
     set_eager_loading

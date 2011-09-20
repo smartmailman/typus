@@ -7,6 +7,7 @@ module Admin::Resources::DataTypes::DateHelper
   end
 
   alias_method :datetime_filter, :date_filter
+  alias_method :time_filter, :date_filter
   alias_method :timestamp_filter, :date_filter
 
 end

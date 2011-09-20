@@ -5,14 +5,56 @@ module Typus
 
         include Typus::Orm::Base
 
+        def any?(*args)
+          self.all.any?(*args)
+        end
+
         def table_name
           collection_name
         end
+
+        def typus_fields_for(filter)
+          ActiveSupport::OrderedHash.new.tap do |fields_with_type|
+            get_typus_fields_for(filter).each do |field|
+              [:virtual, :custom, :association, :selector].each do |attribute|
+                if (value = send("#{attribute}_attribute?", field))
+                  fields_with_type[field.to_s] = value
+                end
+              end
+              fields_with_type[field.to_s] ||= model_fields[field]
+            end
+          end
+        end
+
+        def virtual_fields
+          instance_methods.map { |i| i.to_s } - model_fields.keys.map { |i| i.to_s }
+        end
+
+        def virtual_attribute?(field)
+          :virtual if virtual_fields.include?(field.to_s)
+        end
+        def selector_attribute?(field)
+          :selector if typus_field_options_for(:selectors).include?(field)
+        end
+
+        def association_attribute?(field)
+          reflect_on_association(field).macro if reflect_on_association(field)
+        end
+
+        def custom_attribute?(field)
+          case field.to_s
+          when 'parent', 'parent_id' then :tree
+          when /password/            then :password
+          when 'position'            then :position
+          when /\./                  then :transversal
+          end
+        end
+
         #
         # Model fields as an <tt>ActiveSupport::OrderedHash</tt>.
         def model_fields
           ActiveSupport::OrderedHash.new.tap do |hash|
-            fields.values.map { |u| hash[u.name.to_sym] = u.type.name.to_sym }
+            fields.values.map { |u| hash[u.name.to_sym] = u.type.name.downcase.to_sym }
           end
         end
 
@@ -22,6 +64,7 @@ module Typus
             relations.values.map { |i| hash[i.name] = i.macro }
           end
         end
+
       end
     end
   end
