@@ -14,6 +14,11 @@ module Typus
         super(attributes)
       end
 
+      def toggle(attribute)
+        self[attribute] = !send("#{attribute}?")
+        self
+      end
+
     end
   end
 end
