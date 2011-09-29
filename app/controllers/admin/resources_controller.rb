@@ -183,10 +183,7 @@ class Admin::ResourcesController < Admin::BaseController
 
   def set_order
     params[:sort_order] ||= "desc"
-
-    if (order = params[:order_by] ? "#{params[:order_by]} #{params[:sort_order]}" : @resource.typus_order_by).present?
-      @resource = @resource.order(order)
-    end
+    @resource = @resource.typus_order_by(params[:order_by],params[:sort_order])
   end
 
   def set_eager_loading

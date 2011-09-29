@@ -110,8 +110,6 @@ module Typus
         end
       end
 
-      def typus_order_by;end
-
       #--
       # Define our own boolean mappings.
       #
