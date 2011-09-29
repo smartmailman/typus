@@ -26,32 +26,37 @@ Description:
         @configuration
       end
 
+      def fields_for(model, *defaults)
+        rejections = %w( ^id$ _type$ type created_at created_on updated_at updated_on deleted_at ).join("|")
+        fields = model.table_exists? ? model.columns.map(&:name) : defaults
+        fields.reject { |f| f.match(rejections) }.join(", ")
+      end
+
       def generate_yaml
         Typus.reload!
 
         configuration = {}
-        models = Typus.application_models.reject { |m| Typus.models.include?(m) }.map { |m| m.constantize }
+        models = Typus.application_models.reject { |m| Typus.models.include?(m) }.map(&:constantize)
 
         models.each do |model|
-          configuration[model.table_name] = {}
+          key = model.name.underscore
+
+          configuration[key] = {}
 
           relationships = [ :has_many, :has_one ].map do |relationship|
                             model.reflect_on_all_associations(relationship).map { |i| i.name.to_s }
                           end.flatten.join(", ")
 
-          rejections = %w( ^id$ _type$ type created_at created_on updated_at updated_on deleted_at ).join("|")
-          fields = model.columns.map(&:name).reject { |f| f.match(rejections) }.join(", ")
-
-          configuration[model.table_name][:base] = <<-RAW
+          configuration[key][:base] = <<-RAW
 #{model}:
   fields:
-    default: #{fields}
-    form: #{fields}
+    default: #{fields_for(model, 'to_label')}
+    form: #{fields_for(model)}
   relationships: #{relationships}
   application: Application
           RAW
 
-          configuration[model.table_name][:roles] = "#{model}: create, read, update, delete"
+          configuration[key][:roles] = "#{model}: create, read, update, delete"
         end
 
         configuration

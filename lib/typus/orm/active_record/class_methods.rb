@@ -32,8 +32,27 @@ module Typus
           end
         end
 
+        def get_typus_fields_for(filter)
+          data = read_model_config['fields']
+          fields = case filter.to_sym
+                   when :index                  then data['index'] || data['list']
+                   when :new, :create           then data['new'] || data['form']
+                   when :edit, :update, :toggle then data['edit'] || data['form']
+                   else
+                     data[filter.to_s]
+                   end
+
+          fields ||= data['default'] || typus_default_fields_for(filter)
+          fields = fields.extract_settings if fields.is_a?(String)
+          fields.map(&:to_sym)
+        end
+
+        def typus_default_fields_for(filter)
+          filter.to_sym.eql?(:index) ? ['id'] : model_fields.keys
+        end
+
         def virtual_fields
-          instance_methods.map { |i| i.to_s } - model_fields.keys.map { |i| i.to_s }
+          instance_methods.map(&:to_s) - model_fields.keys.map(&:to_s)
         end
 
         def virtual_attribute?(field)
@@ -41,7 +60,7 @@ module Typus
         end
 
         def dragonfly_attribute?(field)
-          if respond_to?(:dragonfly_attachment_classes) && dragonfly_attachment_classes.map { |i| i.attribute }.include?(field)
+          if respond_to?(:dragonfly_attachment_classes) && dragonfly_attachment_classes.map(&:attribute).include?(field)
             :dragonfly
           end
         end
@@ -79,6 +98,11 @@ module Typus
           end
 
           self.order(order_string)
+        end
+
+        def get_typus_filters
+          data = read_model_config['filters'] || ""
+          data.extract_settings.map(&:to_sym)
         end
 
       end
