@@ -4,7 +4,29 @@ module Typus
       module Search
 
         def build_search_conditions(key, value)
-          { key => value }
+          search_fields = typus_search_fields
+          search_fields = search_fields.empty? ? { "name" => "@" } : search_fields
+
+          search_query = search_fields.map do |key, type|
+            related_model = self
+
+            split_keys = key.split('.')
+            split_keys[0..-2].each do |split_key|
+              if related_model.responds_to? :relations && related_model.relations[split_key] && related_model.relations[split_key].embeded?
+                related_model = related_model.relations[split_key]
+              else
+                raise "Search key '#{key}' is invalid. #{split_key} is not an embeded document" if related_model.embeded?
+              end
+            end
+
+            field = related_model.fields[split_keys.last]
+            raise "Search key '#{field.name}' is invalid." unless field
+            value = field.serialize(value) if field.type.ancestors.include?(Numeric)
+
+            {key => value}
+          end
+
+          {'$or' => search_query}
         end
 
         def build_boolean_conditions(key, value)
@@ -68,8 +90,8 @@ module Typus
 
             query_params.reject! do |k, v|
               !model_fields.keys.include?(k.to_sym) &&
-              !model_relationships.keys.include?(k.to_sym) &&
-              !(k.to_sym == :search)
+                !model_relationships.keys.include?(k.to_sym) &&
+                !(k.to_sym == :search)
             end
 
             query_params.compact.each do |key, value|
