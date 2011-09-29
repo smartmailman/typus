@@ -89,7 +89,7 @@ module Typus
         end
 
         def typus_order_by(order_by = nil, sort_order = nil)
-          if order_by.nil? && sort_order.nil?
+          if order_by.nil? || sort_order.nil?
             order_string = typus_defaults_for(:order_by).map do |field|
               field.include?('-') ? "#{field.delete('-')} DESC" : "#{field} ASC"
             end.join(', ')

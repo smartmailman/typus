@@ -12,15 +12,13 @@ module Typus
         end
 
         def typus_order_by(order_field = nil, sort_order = nil)
-          raise typus_defaults_for(:order_by).inspect
-          if order_field.nil? && sort_order.nil?
+          if order_field.nil? || sort_order.nil?
             order_array = typus_defaults_for(:order_by).map do |field|
               field.include?('-') ? [field.delete('-'), :desc] : [field, :asc]
             end
           else
             order_array = [[order_field, sort_order.downcase.to_sym]]
           end
-
           self.order_by(order_array)
         end
 
