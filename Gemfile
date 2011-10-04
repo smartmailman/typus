@@ -14,10 +14,6 @@ group :assets do
 end
 
 # Database adapters
-gem 'bson'
-gem 'mongo'
-gem 'mongoid'
-
 platforms :jruby do
   gem 'activerecord-jdbcmysql-adapter'
   gem 'activerecord-jdbcpostgresql-adapter'
@@ -56,6 +52,11 @@ gem "rack-cache", :require => "rack/cache"
 
 # Asset Management with Paperclip
 gem "paperclip", "~> 2.3.16"
+
+# MongoDB
+gem "mongoid", "~> 2.1"
+gem 'bson'
+gem "bson_ext", "~> 1.3"
 
 group :test do
   gem "shoulda-context", "~> 1.0.0.beta1"
