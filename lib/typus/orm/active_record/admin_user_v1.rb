@@ -31,7 +31,7 @@ module Typus
 
             before_save :initialize_salt, :encrypt_password, :set_token
 
-            serialize :preferences
+            # serialize :preferences
 
             def self.authenticate(email, password)
               user = find_by_email_and_status(email, true)

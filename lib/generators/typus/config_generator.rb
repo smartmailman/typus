@@ -43,7 +43,7 @@ Description:
 
           configuration[key] = {}
 
-          relationships = [ :has_many, :has_one ].map do |relationship|
+          relationships = [ :has_many, :has_one, :references_many, :references_one ].map do |relationship|
                             model.reflect_on_all_associations(relationship).map { |i| i.name.to_s }
                           end.flatten.join(", ")
 

@@ -88,4 +88,13 @@ module Admin::Resources::DataTypes::BelongsToHelper
     link_to Typus::I18n.t("Add New"), default_options, { :class => 'iframe' }
   end
 
+  
+  
+  alias_method :typus_referenced_in_field, :typus_belongs_to_field
+  alias_method :table_referenced_in_field, :table_belongs_to_field
+  alias_method :display_referenced_in, :display_belongs_to
+  alias_method :referenced_in_filter, :belongs_to_filter
+  alias_method :build_label_text_for_referenced_in, :build_label_text_for_belongs_to
+  alias_method :build_add_new_for_referenced_in, :build_add_new_for_belongs_to
+
 end

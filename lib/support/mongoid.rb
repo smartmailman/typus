@@ -5,6 +5,10 @@ module Mongoid
       def order(*args)
         order_by(*args)
       end
+      
+      def columns
+        fields.to_a.map{ |item| item[1] }
+      end
     end
 
     #--
@@ -46,10 +50,5 @@ module Mongoid
     end
   
   end
-  
-  # module Criterion
-  #   module Optional
-  #   end
-  # end
-  
+
 end
