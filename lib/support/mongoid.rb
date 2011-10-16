@@ -1,5 +1,11 @@
 module Mongoid
   module Document
+    
+    module ClassMethods
+      def order(*args)
+        order_by(*args)
+      end
+    end
 
     #--
     # On a model:
@@ -41,10 +47,9 @@ module Mongoid
   
   end
   
-  module Criterion
-    module Optional
-      alias_method :order, :order_by
-    end
-  end
+  # module Criterion
+  #   module Optional
+  #   end
+  # end
   
 end

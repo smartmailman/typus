@@ -2,7 +2,7 @@ module Admin::Resources::DataTypes::HasManyHelper
 
   def has_many_filter(filter)
     att_assoc = @resource.reflect_on_association(filter.to_sym)
-    class_name = ( att_assoc.defined?(:options) ? att_assoc.options[:class_name] : att_assoc.class_name ) || filter.classify
+    class_name = ( att_assoc.respond_to?(:options) ? att_assoc.options[:class_name] : att_assoc.class_name ) || filter.classify
     resource = class_name.constantize
 
     items = [[Typus::I18n.t("View all %{attribute}", :attribute => @resource.human_attribute_name(filter).downcase.pluralize), ""]]
@@ -16,7 +16,7 @@ module Admin::Resources::DataTypes::HasManyHelper
 
     options = { "resource[#{@reflection.foreign_key}]" => @item.id }
 
-    if (as = att_assoc.defined?(:options) ? att_assoc.options[:as] : att_assoc.as)
+    if  @resource.respond_to?(:options) && (as = @resource.respond_to?(:options) ? resource.options[:as] : resource.as)
       klass = @resource.is_sti? ? @resource.superclass : @resource
       options.merge!("#{as}_type" => klass)
     end
