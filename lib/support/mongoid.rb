@@ -38,10 +38,13 @@ module Mongoid
         [self.class, id].join("#")
       end
     end
-    
-    module ClassMethods
-      alias_method :order, :order_by
-    end
   
   end
+  
+  module Criterion
+    module Optional
+      alias_method :order, :order_by
+    end
+  end
+  
 end
