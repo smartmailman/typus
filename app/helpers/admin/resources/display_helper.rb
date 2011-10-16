@@ -17,8 +17,12 @@ module Admin::Resources::DisplayHelper
       @resource.typus_defaults_for(:relationships).each do |relationship|
         association = @resource.reflect_on_association(relationship.to_sym)
         macro, klass = association.macro, association.class_name.constantize
-        if [:has_many, :has_one].include?(macro) && admin_user.can?('read', klass)
-          html << send("typus_form_#{macro}", relationship)
+        #if [:has_many, :has_one].include?(macro) && admin_user.can?('read', klass)
+        #  html << send("typus_form_#{macro}", relationship)
+        if [:references_many, :has_many].include?(macro) && admin_user.can?('read', klass)
+          html << send("typus_form_has_many", relationship)
+        elsif [:references_one, :has_one].include?(macro) && admin_user.can?('read', klass)
+          html << send("typus_form_has_one", relationship)
         end
       end
     end.html_safe

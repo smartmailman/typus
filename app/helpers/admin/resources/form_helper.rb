@@ -5,7 +5,7 @@ module Admin::Resources::FormHelper
       fields.each do |key, value|
         value = :template if (template = @resource.typus_template(key))
         html << case value
-                when :belongs_to
+                when :belongs_to, :referenced_in
                   typus_belongs_to_field(key, form)
                 when :tree
                   typus_tree_field(key, form)

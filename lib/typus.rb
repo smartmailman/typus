@@ -1,4 +1,5 @@
 require "support/active_record"
+require "support/mongoid"
 require "support/hash"
 require "support/object"
 require "support/string"
@@ -6,6 +7,7 @@ require "support/string"
 require "typus/engine"
 require "typus/orm/base"
 require "typus/orm/active_record"
+require "typus/orm/mongoid"
 require "typus/regex"
 require "typus/version"
 

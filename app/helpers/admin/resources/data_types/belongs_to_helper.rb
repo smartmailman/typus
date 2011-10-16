@@ -65,7 +65,7 @@ module Admin::Resources::DataTypes::BelongsToHelper
 
   def belongs_to_filter(filter)
     att_assoc = @resource.reflect_on_association(filter.to_sym)
-    class_name = att_assoc.options[:class_name] || filter.capitalize.camelize
+    class_name = ( att_assoc.defined?(:options) ? att_assoc.options[:class_name] : att_assoc.class_name ) || filter.capitalize.camelize
     resource = class_name.constantize
 
     items = [[Typus::I18n.t("View all %{attribute}", :attribute => @resource.human_attribute_name(filter).downcase.pluralize), ""]]
