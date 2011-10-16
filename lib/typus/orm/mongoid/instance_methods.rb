@@ -3,7 +3,7 @@ module Typus
     module Mongoid
 
       def assign_attributes(attrs = nil, options = {})
-        assigning do
+        _assigning do
           process(attrs, !options[:without_protection]) do |document|
             document.identify if new? && id.blank?
           end
