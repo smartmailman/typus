@@ -63,7 +63,16 @@ module Typus
         # Model fields as an <tt>ActiveSupport::OrderedHash</tt>.
         def model_fields
           ActiveSupport::OrderedHash.new.tap do |hash|
-            fields.values.map { |u| hash[u.name.to_sym] = u.type.name.downcase.to_sym }
+            fields.values.map { |u|
+              #hash[u.name.to_sym] = u.type.name.downcase.to_sym
+              field_type = u.type.name.downcase
+              if field_type == "string" and u.options.has_key?(:long)
+                field_type = "text"
+              elsif field_type == "mongoid::fields::serializable::object"
+                field_type = "text"
+              end
+              hash[u.name.to_sym] = field_type.to_sym
+            }
           end
         end
 
